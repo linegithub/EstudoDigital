@@ -15,10 +15,17 @@ export default function PanelPage() {
   // Fetch user reports
   const { 
     data: reports, 
-    isLoading: isLoadingReports 
+    isLoading: isLoadingReports,
+    error: reportsError 
   } = useQuery<Report[]>({
     queryKey: ["/api/user/reports"],
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    retry: 3,
   });
+  
+  // Log dos relatórios para debug
+  console.log("Reports:", reports);
 
   // Map markers from reports
   const markers = reports?.map(report => ({
@@ -133,6 +140,11 @@ export default function PanelPage() {
                 <div className="flex justify-center items-center py-12">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </div>
+              ) : reportsError ? (
+                <div className="px-4 py-6 text-center text-red-500">
+                  <p>Erro ao carregar as denúncias. Por favor, tente novamente mais tarde.</p>
+                  <p className="text-xs mt-2">{(reportsError as Error).message}</p>
+                </div>
               ) : reports && reports.length > 0 ? (
                 <div className="p-2">
                   {reports.map((report) => (
@@ -156,7 +168,7 @@ export default function PanelPage() {
                         
                         <div className="flex">
                           <span className="inline-block w-20">Endereço:</span> 
-                          <span>{report.street || '-'}</span>
+                          <span>{report.street || '-'} {report.number ? `, ${report.number}` : ''}</span>
                         </div>
                         
                         <div className="flex">
@@ -172,6 +184,19 @@ export default function PanelPage() {
                         <div className="flex">
                           <span className="inline-block w-20">CEP:</span> 
                           <span>{report.zip || '-'}</span>
+                        </div>
+                        
+                        {/* Para debug - mostrar dados brutos */}
+                        <div className="mt-2 p-1 bg-gray-100 dark:bg-gray-800 rounded text-xs">
+                          <pre>{JSON.stringify({
+                            street: report.street,
+                            number: report.number,
+                            neighborhood: report.neighborhood,
+                            city: report.city,
+                            state: report.state,
+                            zip: report.zip,
+                            address: report.address
+                          }, null, 2)}</pre>
                         </div>
                       </div>
                     </div>
