@@ -54,6 +54,12 @@ export default function PanelPage() {
         return 'Recebido'; // Default status quando não houver status definido
     }
   };
+  
+  // Format date helper
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) return '-';
+    return new Date(dateString).toLocaleDateString('pt-BR');
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -126,47 +132,44 @@ export default function PanelPage() {
               ) : reports && reports.length > 0 ? (
                 <div className="divide-y divide-border">
                   {reports.map((report) => (
-                    <div key={report.id} className="px-4 py-4 sm:px-6 hover:bg-muted/50">
-                      <div className="flex items-center justify-between mb-2">
-                        <div>
-                          <h3 className="text-sm font-medium text-primary">{report.title}</h3>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Criado em: {new Date(report.createdAt).toLocaleDateString('pt-BR')}
-                          </p>
-                        </div>
-                        <div>
-                          <Badge variant={getStatusBadgeVariant(report.status)}>
-                            {formatStatus(report.status)}
-                          </Badge>
-                        </div>
+                    <div key={report.id} className="px-4 py-5 sm:px-6 hover:bg-muted/50">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-base font-medium text-primary">{report.title}</h3>
+                        <Badge variant={getStatusBadgeVariant(report.status)}>
+                          {formatStatus(report.status)}
+                        </Badge>
                       </div>
                       
-                      <div className="text-sm">
-                        <p className="mb-2 line-clamp-2 text-muted-foreground">{report.description}</p>
+                      <div className="mt-2">
+                        <p className="text-sm text-muted-foreground mb-3">
+                          {report.description}
+                        </p>
                         
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                          {report.street && (
-                            <div>
-                              <span className="font-medium">Rua/Av:</span> {report.street}
-                              {report.number && <span>, {report.number}</span>}
-                            </div>
-                          )}
+                        <div className="text-sm text-muted-foreground">
+                          <p className="mb-1">
+                            <span className="inline-block w-28">Criado em:</span> 
+                            {formatDate(report.createdAt as string)}
+                          </p>
                           
-                          {report.neighborhood && (
-                            <div>
-                              <span className="font-medium">Bairro:</span> {report.neighborhood}
-                            </div>
-                          )}
+                          <p className="mb-1">
+                            <span className="inline-block w-28">Endereço:</span> 
+                            {report.street}{report.number ? `, ${report.number}` : ''}
+                          </p>
                           
-                          <div>
-                            <span className="font-medium">Cidade/UF:</span> {report.city}/{report.state}
-                          </div>
+                          <p className="mb-1">
+                            <span className="inline-block w-28">Bairro:</span> 
+                            {report.neighborhood || '-'}
+                          </p>
                           
-                          {report.zip && (
-                            <div>
-                              <span className="font-medium">CEP:</span> {report.zip}
-                            </div>
-                          )}
+                          <p className="mb-1">
+                            <span className="inline-block w-28">Cidade/UF:</span> 
+                            {report.city}/{report.state}
+                          </p>
+                          
+                          <p className="mb-1">
+                            <span className="inline-block w-28">CEP:</span> 
+                            {report.zip || '-'}
+                          </p>
                         </div>
                       </div>
                     </div>
