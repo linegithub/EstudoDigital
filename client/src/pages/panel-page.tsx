@@ -168,35 +168,7 @@ export default function PanelPage() {
                         
                         <div className="flex">
                           <span className="inline-block w-20">Endereço:</span> 
-                          <span>{report.street || '-'} {report.number ? `, ${report.number}` : ''}</span>
-                        </div>
-                        
-                        <div className="flex">
-                          <span className="inline-block w-20">Bairro:</span> 
-                          <span>{report.neighborhood || '-'}</span>
-                        </div>
-                        
-                        <div className="flex">
-                          <span className="inline-block w-20">Cidade/UF:</span> 
-                          <span>{report.city || '-'} / {report.state || '-'}</span>
-                        </div>
-                        
-                        <div className="flex">
-                          <span className="inline-block w-20">CEP:</span> 
-                          <span>{report.zip || '-'}</span>
-                        </div>
-                        
-                        {/* Para debug - mostrar dados brutos */}
-                        <div className="mt-2 p-1 bg-gray-100 dark:bg-gray-800 rounded text-xs">
-                          <pre>{JSON.stringify({
-                            street: report.street,
-                            number: report.number,
-                            neighborhood: report.neighborhood,
-                            city: report.city,
-                            state: report.state,
-                            zip: report.zip,
-                            address: report.address
-                          }, null, 2)}</pre>
+                          <span>{report.address || '-'}</span>
                         </div>
                       </div>
                     </div>
