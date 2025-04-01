@@ -148,27 +148,42 @@ export default function PanelPage() {
               ) : reports && reports.length > 0 ? (
                 <div className="p-2">
                   {reports.map((report) => (
-                    <div key={report.id} className="p-4 hover:bg-muted/50 bg-sky-50 dark:bg-slate-800/50 rounded-md my-2 mx-2">
+                    <div key={report.id} className="p-4 hover:bg-muted/50 bg-blue-50 dark:bg-slate-800/50 rounded-md my-3 mx-2 border border-blue-100 dark:border-slate-700 shadow-sm">
                       <div className="flex justify-between items-start mb-1">
-                        <h3 className="text-base font-medium text-primary">{report.title}</h3>
-                        <Badge variant="outline" className="ml-1 bg-white">
+                        <h3 className="text-base font-medium text-blue-700 dark:text-blue-400">{report.title}</h3>
+                        <Badge variant="outline" className="ml-1 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400">
                           {formatStatus(report.status)}
                         </Badge>
                       </div>
                       
-                      <p className="text-sm mb-3">
+                      <p className="text-sm mb-4 text-slate-600 dark:text-slate-300">
                         {report.description}
                       </p>
                       
-                      <div className="text-sm space-y-1 text-muted-foreground">
+                      <div className="text-sm space-y-1.5 text-slate-500 dark:text-slate-400">
                         <div className="flex">
-                          <span className="inline-block w-20">Criado em:</span> 
+                          <span className="inline-block w-24 font-medium">Criado em:</span> 
                           <span>{formatDate(report.createdAt)}</span>
                         </div>
                         
                         <div className="flex">
-                          <span className="inline-block w-20">Endereço:</span> 
-                          <span>{report.address || '-'}</span>
+                          <span className="inline-block w-24 font-medium">Endereço:</span> 
+                          <span>{report.street || '-'}{report.number ? `, ${report.number}` : ''}</span>
+                        </div>
+                        
+                        <div className="flex">
+                          <span className="inline-block w-24 font-medium">Bairro:</span> 
+                          <span>{report.neighborhood || '-'}</span>
+                        </div>
+                        
+                        <div className="flex">
+                          <span className="inline-block w-24 font-medium">Cidade/UF:</span> 
+                          <span>{report.city || '-'} / {report.state || '-'}</span>
+                        </div>
+                        
+                        <div className="flex">
+                          <span className="inline-block w-24 font-medium">CEP:</span> 
+                          <span>{report.zip || '-'}</span>
                         </div>
                       </div>
                     </div>
