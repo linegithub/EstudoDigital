@@ -23,6 +23,13 @@ import { useToast } from "@/hooks/use-toast";
 import { Search, MapPin } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { geocode } from 'nominatim-browser';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function ReportPage() {
   const { user, logoutMutation } = useAuth();
@@ -37,9 +44,47 @@ export default function ReportPage() {
     .extend({
       latitude: z.string().min(1, "Latitude é obrigatória"),
       longitude: z.string().min(1, "Longitude é obrigatória"),
+      // Campos adicionais para estruturar melhor o endereço
+      street: z.string().min(1, "Nome da rua é obrigatório"),
+      number: z.string().optional(),
+      neighborhood: z.string().min(1, "Bairro é obrigatório"),
+      city: z.string().min(1, "Cidade é obrigatória"),
+      state: z.string().min(1, "Estado é obrigatório"),
+      zip: z.string().optional(),
     });
 
   type ReportFormValues = z.infer<typeof reportSchema>;
+
+  // Lista de estados brasileiros
+  const brazilianStates = [
+    { value: "AC", label: "Acre" },
+    { value: "AL", label: "Alagoas" },
+    { value: "AP", label: "Amapá" },
+    { value: "AM", label: "Amazonas" },
+    { value: "BA", label: "Bahia" },
+    { value: "CE", label: "Ceará" },
+    { value: "DF", label: "Distrito Federal" },
+    { value: "ES", label: "Espírito Santo" },
+    { value: "GO", label: "Goiás" },
+    { value: "MA", label: "Maranhão" },
+    { value: "MT", label: "Mato Grosso" },
+    { value: "MS", label: "Mato Grosso do Sul" },
+    { value: "MG", label: "Minas Gerais" },
+    { value: "PA", label: "Pará" },
+    { value: "PB", label: "Paraíba" },
+    { value: "PR", label: "Paraná" },
+    { value: "PE", label: "Pernambuco" },
+    { value: "PI", label: "Piauí" },
+    { value: "RJ", label: "Rio de Janeiro" },
+    { value: "RN", label: "Rio Grande do Norte" },
+    { value: "RS", label: "Rio Grande do Sul" },
+    { value: "RO", label: "Rondônia" },
+    { value: "RR", label: "Roraima" },
+    { value: "SC", label: "Santa Catarina" },
+    { value: "SP", label: "São Paulo" },
+    { value: "SE", label: "Sergipe" },
+    { value: "TO", label: "Tocantins" }
+  ];
 
   // Form setup
   const form = useForm<ReportFormValues>({
@@ -50,6 +95,12 @@ export default function ReportPage() {
       address: "",
       latitude: "",
       longitude: "",
+      street: "",
+      number: "",
+      neighborhood: "",
+      city: "",
+      state: "SP", // Padrão para São Paulo
+      zip: "",
     },
   });
 
@@ -98,21 +149,42 @@ export default function ReportPage() {
     }]);
   };
 
-  // Handle address lookup usando OpenStreetMap Nominatim API
+  // Handle address lookup usando OpenStreetMap Nominatim API com campos estruturados
   const handleAddressLookup = async () => {
-    const address = form.getValues("address");
-    if (!address) {
+    // Pegar todos os valores do formulário de endereço
+    const street = form.getValues("street");
+    const number = form.getValues("number");
+    const neighborhood = form.getValues("neighborhood");
+    const city = form.getValues("city");
+    const state = form.getValues("state");
+    const zip = form.getValues("zip");
+    
+    // Verificar se os campos obrigatórios foram preenchidos
+    if (!street || !city || !state) {
       toast({
-        title: "Endereço vazio",
-        description: "Por favor, digite um endereço para localizar no mapa.",
+        title: "Endereço incompleto",
+        description: "Por favor, preencha pelo menos rua, cidade e estado para localizar no mapa.",
         variant: "destructive",
       });
       return;
     }
     
     try {
-      // Adicionar "Brasil" ao final do endereço para melhorar a precisão
-      const searchAddress = `${address}, Brasil`;
+      // Montar o endereço estruturado para geocodificação
+      let formattedAddress = street;
+      if (number) formattedAddress += `, ${number}`;
+      if (neighborhood) formattedAddress += `, ${neighborhood}`;
+      formattedAddress += `, ${city}`;
+      
+      // Adicionar o nome do estado por extenso (não a sigla)
+      const stateFullName = brazilianStates.find(s => s.value === state)?.label || state;
+      formattedAddress += `, ${stateFullName}`;
+      
+      if (zip) formattedAddress += `, ${zip}`;
+      formattedAddress += `, Brasil`; // Adicionar o país para maior precisão
+      
+      // Atualizar o campo de endereço completo
+      form.setValue("address", formattedAddress, { shouldValidate: true });
       
       // Indicar que está processando
       toast({
@@ -120,11 +192,22 @@ export default function ReportPage() {
         description: "Aguarde enquanto buscamos o endereço no mapa.",
       });
       
-      // Realizar a geocodificação - usando tipos mais simples para compatibilidade
-      const results = await geocode({
-        q: searchAddress,
-        limit: 1
-      });
+      // Parâmetros avançados para o Nominatim
+      const params: any = {
+        q: formattedAddress,
+        limit: 1,
+        // Adicionar parâmetros específicos para o Brasil
+        countrycodes: ['br'],
+        // Tentar usar estruturas específicas quando disponíveis
+        street: street + (number ? ` ${number}` : ''),
+        city: city,
+        state: stateFullName,
+        postalcode: zip,
+        country: 'Brasil'
+      };
+      
+      // Realizar a geocodificação - usando formato estruturado quando possível
+      const results = await geocode(params);
       
       if (results && results.length > 0) {
         const location = results[0];
@@ -141,7 +224,7 @@ export default function ReportPage() {
         // Adicionar marcador ao mapa
         setMarkers([{
           position: [lat, lng],
-          popup: address
+          popup: formattedAddress
         }]);
         
         toast({
@@ -149,12 +232,44 @@ export default function ReportPage() {
           description: "Localização precisa encontrada no mapa.",
         });
       } else {
-        // Caso não encontre o endereço
+        // Caso não encontre o endereço, tentar sem estruturação
         toast({
-          title: "Endereço não encontrado",
-          description: "Não foi possível localizar o endereço. Tente ser mais específico ou marque diretamente no mapa.",
-          variant: "destructive",
+          title: "Tentando novamente...",
+          description: "Primeira tentativa falhou, tentando novamente com formato simplificado.",
         });
+        
+        // Segunda tentativa com formato simplificado
+        const simplifiedResults = await geocode({
+          q: formattedAddress,
+          limit: 1
+        });
+        
+        if (simplifiedResults && simplifiedResults.length > 0) {
+          const location = simplifiedResults[0];
+          const lat = parseFloat(location.lat);
+          const lng = parseFloat(location.lon);
+          
+          setMapCenter([lat, lng]);
+          form.setValue("latitude", lat.toString(), { shouldValidate: true });
+          form.setValue("longitude", lng.toString(), { shouldValidate: true });
+          
+          setMarkers([{
+            position: [lat, lng],
+            popup: formattedAddress
+          }]);
+          
+          toast({
+            title: "Endereço localizado",
+            description: "Localização encontrada no mapa (segunda tentativa).",
+          });
+        } else {
+          // Caso não encontre o endereço
+          toast({
+            title: "Endereço não encontrado",
+            description: "Não foi possível localizar o endereço. Tente ser mais específico ou marque diretamente no mapa.",
+            variant: "destructive",
+          });
+        }
       }
     } catch (error) {
       console.error("Erro ao geocodificar:", error);
@@ -257,30 +372,135 @@ export default function ReportPage() {
                       )}
                     />
                     
-                    <FormField
-                      control={form.control}
-                      name="address"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Endereço</FormLabel>
-                          <div className="flex gap-2">
+                    {/* Campos estruturados de endereço */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="street"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Rua/Avenida</FormLabel>
                             <FormControl>
-                              <Input placeholder="Rua, número, bairro, cidade" {...field} />
+                              <Input placeholder="Ex: Rua das Flores" {...field} />
                             </FormControl>
-                            <Button 
-                              type="button" 
-                              onClick={handleAddressLookup}
-                              variant="outline"
-                              className="flex-shrink-0"
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="number"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Número</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Ex: 123" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="neighborhood"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Bairro</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Ex: Centro" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="zip"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>CEP</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Ex: 12345-678" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="city"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Cidade</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Ex: São Paulo" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="state"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Estado</FormLabel>
+                            <Select 
+                              onValueChange={field.onChange} 
+                              defaultValue={field.value}
                             >
-                              <Search className="h-4 w-4 mr-2" />
-                              Localizar
-                            </Button>
-                          </div>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione o estado" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {brazilianStates.map((state) => (
+                                  <SelectItem key={state.value} value={state.value}>
+                                    {state.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="flex gap-2 items-end">
+                      <div className="flex-grow">
+                        <FormField
+                          control={form.control}
+                          name="address"
+                          render={({ field }) => (
+                            <FormItem className="hidden">
+                              <FormControl>
+                                <Input type="hidden" {...field} />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <Button 
+                        type="button" 
+                        onClick={handleAddressLookup}
+                        variant="outline"
+                        className="flex-shrink-0"
+                      >
+                        <Search className="h-4 w-4 mr-2" />
+                        Localizar no Mapa
+                      </Button>
+                    </div>
                     
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
