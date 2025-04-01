@@ -61,6 +61,21 @@ export default function HomePage() {
                 <li>Contribuir para o combate às doenças transmitidas pelo Aedes Aegypti</li>
               </ul>
               <p className="mb-4">Para começar, cadastre-se gratuitamente na plataforma.</p>
+              
+              <div className="mt-8 flex flex-col sm:flex-row gap-4">
+                <button 
+                  onClick={() => handleNavigate('/auth')}
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-2 px-6 rounded-md"
+                >
+                  Fazer Login
+                </button>
+                <button 
+                  onClick={() => handleNavigate('/auth?tab=register')}
+                  className="bg-card hover:bg-card/90 text-card-foreground border border-border font-medium py-2 px-6 rounded-md"
+                >
+                  Cadastrar-se
+                </button>
+              </div>
             </div>
           </div>
         </div>

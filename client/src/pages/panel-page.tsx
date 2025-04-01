@@ -105,10 +105,11 @@ export default function PanelPage() {
                 className="text-sm text-muted-foreground hover:text-foreground"
                 onClick={() => {
                   logoutMutation.mutate();
-                  navigate("/");
+                  // O redirecionamento será feito no próprio hook de autenticação
                 }}
+                disabled={logoutMutation.isPending}
               >
-                Logout
+                {logoutMutation.isPending ? "Saindo..." : "Logout"}
               </Button>
             </div>
           </div>

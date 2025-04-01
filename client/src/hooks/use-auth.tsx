@@ -83,10 +83,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     onSuccess: () => {
       queryClient.setQueryData(["/api/user"], null);
+      queryClient.invalidateQueries({queryKey: ["/api/user"]});
+      
+      // Forçar a invalidação do cache e limpar os dados
+      queryClient.clear();
+      
       toast({
         title: "Logout realizado",
         description: "Você foi desconectado com sucesso.",
       });
+      
+      // Redirecionar para a página inicial após o logout
+      window.location.href = "/";
     },
     onError: (error: Error) => {
       toast({
