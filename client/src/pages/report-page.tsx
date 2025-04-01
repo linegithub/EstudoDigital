@@ -192,21 +192,15 @@ export default function ReportPage() {
         description: "Aguarde enquanto buscamos o endereço no mapa.",
       });
       
-      // Parâmetros avançados para o Nominatim
+      // Apenas usar o parâmetro de consulta (q) com o endereço completo formatado
+      // Os parâmetros estruturados estão causando erro com a API do Nominatim
       const params: any = {
         q: formattedAddress,
         limit: 1,
-        // Adicionar parâmetros específicos para o Brasil
-        countrycodes: ['br'],
-        // Tentar usar estruturas específicas quando disponíveis
-        street: street + (number ? ` ${number}` : ''),
-        city: city,
-        state: stateFullName,
-        postalcode: zip,
-        country: 'Brasil'
+        format: 'json'
       };
       
-      // Realizar a geocodificação - usando formato estruturado quando possível
+      // Realizar a geocodificação com formato simplificado
       const results = await geocode(params);
       
       if (results && results.length > 0) {
@@ -232,44 +226,12 @@ export default function ReportPage() {
           description: "Localização precisa encontrada no mapa.",
         });
       } else {
-        // Caso não encontre o endereço, tentar sem estruturação
+        // Caso não encontre o endereço
         toast({
-          title: "Tentando novamente...",
-          description: "Primeira tentativa falhou, tentando novamente com formato simplificado.",
+          title: "Endereço não encontrado",
+          description: "Não foi possível localizar o endereço. Tente ser mais específico ou marque diretamente no mapa.",
+          variant: "destructive",
         });
-        
-        // Segunda tentativa com formato simplificado
-        const simplifiedResults = await geocode({
-          q: formattedAddress,
-          limit: 1
-        });
-        
-        if (simplifiedResults && simplifiedResults.length > 0) {
-          const location = simplifiedResults[0];
-          const lat = parseFloat(location.lat);
-          const lng = parseFloat(location.lon);
-          
-          setMapCenter([lat, lng]);
-          form.setValue("latitude", lat.toString(), { shouldValidate: true });
-          form.setValue("longitude", lng.toString(), { shouldValidate: true });
-          
-          setMarkers([{
-            position: [lat, lng],
-            popup: formattedAddress
-          }]);
-          
-          toast({
-            title: "Endereço localizado",
-            description: "Localização encontrada no mapa (segunda tentativa).",
-          });
-        } else {
-          // Caso não encontre o endereço
-          toast({
-            title: "Endereço não encontrado",
-            description: "Não foi possível localizar o endereço. Tente ser mais específico ou marque diretamente no mapa.",
-            variant: "destructive",
-          });
-        }
       }
     } catch (error) {
       console.error("Erro ao geocodificar:", error);

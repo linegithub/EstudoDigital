@@ -1,0 +1,33 @@
+Warning: A component is changing an uncontrolled input to be controlled. This is likely caused by the value changing from undefined to a defined value, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component. More info: https://reactjs.org/link/controlled-components
+    at input
+    at _c (https://b8b75a3c-d2cc-4326-b5e9-ba18f5030456-00-38ai13kxkcnrk.spock.replit.dev/src/components/ui/input.tsx:20:11)
+    at https://b8b75a3c-d2cc-4326-b5e9-ba18f5030456-00-38ai13kxkcnrk.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UACHJROW.js?v=c6f0b0df:52:11
+    at https://b8b75a3c-d2cc-4326-b5e9-ba18f5030456-00-38ai13kxkcnrk.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UACHJROW.js?v=c6f0b0df:33:11
+    at https://b8b75a3c-d2cc-4326-b5e9-ba18f5030456-00-38ai13kxkcnrk.spock.replit.dev/src/components/ui/form.tsx:129:9
+    at div
+    at https://b8b75a3c-d2cc-4326-b5e9-ba18f5030456-00-38ai13kxkcnrk.spock.replit.dev/src/components/ui/form.tsx:71:6
+    at Controller (https://b8b75a3c-d2cc-4326-b5e9-ba18f5030456-00-38ai13kxkcnrk.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-YABUFNLM.js?v=c6f0b0df:313:35)
+    at FormField (https://b8b75a3c-d2cc-4326-b5e9-ba18f5030456-00-38ai13kxkcnrk.spock.replit.dev/src/components/ui/form.tsx:32:6)
+    at div
+    at form
+    at FormProvider (https://b8b75a3c-d2cc-4326-b5e9-ba18f5030456-00-38ai13kxkcnrk.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-YABUFNLM.js?v=c6f0b0df:102:11)
+    at div
+    at div
+    at div
+    at div
+    at main
+    at div
+    at commitUpdate (https://b8b75a3c-d2cc-4326-b5e9-ba18f5030456-00-38ai13kxkcnrk.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=c6f0b0df:8419:11)
+    at Route (https://b8b75a3c-d2cc-4326-b5e9-ba18f5030456-00-38ai13kxkcnrk.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=c6f0b0df:323:16)
+    at ProtectedRoute (https://b8b75a3c-d2cc-4326-b5e9-ba18f5030456-00-38ai13kxkcnrk.spock.replit.dev/src/lib/protected-route.tsx:22:3)
+    at Switch (https://b8b75a3c-d2cc-4326-b5e9-ba18f5030456-00-38ai13kxkcnrk.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=c6f0b0df:379:17)
+    at Router
+    at Router (https://b8b75a3c-d2cc-4326-b5e9-ba18f5030456-00-38ai13kxkcnrk.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=c6f0b0df:291:17)
+    at AuthProvider (https://b8b75a3c-d2cc-4326-b5e9-ba18f5030456-00-38ai13kxkcnrk.spock.replit.dev/src/hooks/use-auth.tsx:26:32)
+    at ThemeProvider (https://b8b75a3c-d2cc-4326-b5e9-ba18f5030456-00-38ai13kxkcnrk.spock.replit.dev/src/hooks/use-theme.tsx:25:3)
+    at App
+    at QueryClientProvider (https://b8b75a3c-d2cc-4326-b5e9-ba18f5030456-00-38ai13kxkcnrk.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=c6f0b0df:2805:3)
+New nominatim error 
+Error {config: {…}, request: XMLHttpRequest, response: {…}}
+Erro ao geocodificar: 
+Error {requestData: Error}
