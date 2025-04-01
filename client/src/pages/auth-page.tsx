@@ -34,6 +34,7 @@ export default function AuthPage() {
   // Redirect if user is already logged in
   useEffect(() => {
     if (user) {
+      console.log("User authenticated, redirecting to panel:", user);
       navigate("/panel");
     }
   }, [user, navigate]);
@@ -61,11 +62,21 @@ export default function AuthPage() {
   });
 
   const onLoginSubmit = (values: z.infer<typeof loginUserSchema>) => {
-    loginMutation.mutate(values);
+    loginMutation.mutate(values, {
+      onSuccess: () => {
+        console.log("Login successful, navigating to panel");
+        navigate("/panel");
+      }
+    });
   };
 
   const onRegisterSubmit = (values: z.infer<typeof registerUserSchema>) => {
-    registerMutation.mutate(values);
+    registerMutation.mutate(values, {
+      onSuccess: () => {
+        console.log("Registration successful, navigating to panel");
+        navigate("/panel");
+      }
+    });
   };
 
   return (
@@ -157,7 +168,7 @@ export default function AuthPage() {
                       />
                       <Button 
                         type="submit" 
-                        className="w-full bg-secondary-500 hover:bg-secondary-600 text-white"
+                        className="w-full"
                         disabled={loginMutation.isPending}
                       >
                         {loginMutation.isPending ? "Entrando..." : "Entrar"}
@@ -272,7 +283,7 @@ export default function AuthPage() {
                       />
                       <Button 
                         type="submit" 
-                        className="w-full bg-primary-600 hover:bg-primary-700 text-white"
+                        className="w-full"
                         disabled={registerMutation.isPending}
                       >
                         {registerMutation.isPending ? "Cadastrando..." : "Cadastrar"}

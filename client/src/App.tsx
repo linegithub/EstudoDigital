@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Router as WouterRouter } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import HomePage from "@/pages/home-page";
@@ -23,8 +23,10 @@ function Router() {
 function App() {
   return (
     <AuthProvider>
-      <Router />
-      <Toaster />
+      <WouterRouter base="">
+        <Router />
+        <Toaster />
+      </WouterRouter>
     </AuthProvider>
   );
 }
