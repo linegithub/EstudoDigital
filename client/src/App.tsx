@@ -7,6 +7,7 @@ import PanelPage from "@/pages/panel-page";
 import ReportPage from "@/pages/report-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "./hooks/use-auth";
+import { ThemeProvider } from "./hooks/use-theme";
 
 function Router() {
   return (
@@ -22,12 +23,14 @@ function Router() {
 
 function App() {
   return (
-    <AuthProvider>
-      <WouterRouter base="">
-        <Router />
-        <Toaster />
-      </WouterRouter>
-    </AuthProvider>
+    <ThemeProvider defaultTheme="system" storageKey="aedes-theme">
+      <AuthProvider>
+        <WouterRouter base="">
+          <Router />
+          <Toaster />
+        </WouterRouter>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

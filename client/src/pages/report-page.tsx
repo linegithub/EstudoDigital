@@ -21,6 +21,7 @@ import { useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Search, MapPin } from "lucide-react";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export default function ReportPage() {
   const { user, logoutMutation } = useAuth();
@@ -121,15 +122,15 @@ export default function ReportPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-card shadow-sm dark:shadow-slate-800/10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center">
               <Button
                 variant="ghost"
-                className="text-neutral-800 font-semibold text-lg"
+                className="text-foreground font-semibold text-lg"
                 onClick={() => navigate("/")}
               >
                 Aedes Monitoramento
@@ -137,19 +138,20 @@ export default function ReportPage() {
             </div>
             
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-neutral-600">
+              <span className="text-sm text-muted-foreground">
                 Olá, {user?.firstName}!
               </span>
+              <ThemeToggle />
               <Button 
                 variant="ghost" 
-                className="text-sm text-neutral-600 hover:text-neutral-900"
+                className="text-sm text-muted-foreground hover:text-foreground"
                 onClick={() => navigate("/panel")}
               >
                 Painel
               </Button>
               <Button 
                 variant="ghost" 
-                className="text-sm text-neutral-600 hover:text-neutral-900"
+                className="text-sm text-muted-foreground hover:text-foreground"
                 onClick={() => {
                   logoutMutation.mutate();
                   navigate("/");
@@ -166,11 +168,11 @@ export default function ReportPage() {
       <main className="flex-grow">
         <div className="py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-2xl font-semibold text-neutral-800 mb-6">Faça uma Denúncia</h1>
+            <h1 className="text-2xl font-semibold text-foreground mb-6">Faça uma Denúncia</h1>
             
             {/* Report Form */}
             <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+              <div className="bg-card shadow-sm dark:shadow-slate-800/10 rounded-lg overflow-hidden">
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-6">
                     <FormField
@@ -270,7 +272,7 @@ export default function ReportPage() {
                     
                     <Button 
                       type="submit" 
-                      className="w-full bg-primary hover:bg-primary/90 text-white"
+                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
                       disabled={createReportMutation.isPending}
                     >
                       {createReportMutation.isPending ? "Enviando..." : "Enviar Denúncia"}
@@ -282,19 +284,19 @@ export default function ReportPage() {
               {/* Map Section */}
               <div className="space-y-4">
                 <div>
-                  <h2 className="text-lg font-medium text-neutral-800 mb-2">Selecione o local no mapa</h2>
-                  <p className="text-sm text-neutral-500 mb-4">
+                  <h2 className="text-lg font-medium text-foreground mb-2">Selecione o local no mapa</h2>
+                  <p className="text-sm text-muted-foreground mb-4">
                     Clique no mapa para definir a localização precisa da denúncia ou use o botão "Localizar" após digitar o endereço.
                   </p>
                 </div>
-                <div className="bg-white p-4 rounded-lg shadow-sm h-[400px]">
+                <div className="bg-card p-4 rounded-lg shadow-sm dark:shadow-slate-800/10 h-[400px]">
                   <LeafletMap 
                     center={mapCenter}
                     height="100%"
                     onClick={handleMapClick}
                   />
                 </div>
-                <div className="flex items-center text-sm text-neutral-500">
+                <div className="flex items-center text-sm text-muted-foreground">
                   <MapPin className="h-4 w-4 mr-2 text-primary" />
                   Sua localização será usada apenas para fins de registro e monitoramento de focos do Aedes Aegypti.
                 </div>
@@ -305,9 +307,9 @@ export default function ReportPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-neutral-200 mt-auto">
+      <footer className="bg-card border-t border-border mt-auto">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-sm text-neutral-500">
+          <p className="text-center text-sm text-muted-foreground">
             © {new Date().getFullYear()} Aedes Monitoramento. Todos os direitos reservados.
           </p>
         </div>

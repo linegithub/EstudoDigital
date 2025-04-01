@@ -6,6 +6,7 @@ import { Loader2 } from "lucide-react";
 import { Report } from "@shared/schema";
 import LeafletMap from "@/components/ui/leaflet-map";
 import { Badge } from "@/components/ui/badge";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export default function PanelPage() {
   const { user, logoutMutation } = useAuth();
@@ -59,15 +60,15 @@ export default function PanelPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-card shadow-sm dark:shadow-slate-800/10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center">
               <Button
                 variant="ghost"
-                className="text-neutral-800 font-semibold text-lg"
+                className="text-foreground font-semibold text-lg"
                 onClick={() => navigate("/")}
               >
                 Aedes Monitoramento
@@ -75,19 +76,20 @@ export default function PanelPage() {
             </div>
             
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-neutral-600">
+              <span className="text-sm text-muted-foreground">
                 Olá, {user?.firstName}!
               </span>
+              <ThemeToggle />
               <Button 
                 variant="ghost" 
-                className="text-sm text-neutral-600 hover:text-neutral-900"
+                className="text-sm text-muted-foreground hover:text-foreground"
                 onClick={() => navigate("/report")}
               >
                 Denúncia
               </Button>
               <Button 
                 variant="ghost" 
-                className="text-sm text-neutral-600 hover:text-neutral-900"
+                className="text-sm text-muted-foreground hover:text-foreground"
                 onClick={() => {
                   logoutMutation.mutate();
                   navigate("/");
@@ -104,11 +106,11 @@ export default function PanelPage() {
       <main className="flex-grow">
         <div className="py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-2xl font-semibold text-neutral-800 mb-2">Bem-vindo ao Painel</h1>
-            <p className="text-neutral-600 mb-6">Aqui você pode visualizar e gerenciar suas denúncias.</p>
+            <h1 className="text-2xl font-semibold text-foreground mb-2">Bem-vindo ao Painel</h1>
+            <p className="text-muted-foreground mb-6">Aqui você pode visualizar e gerenciar suas denúncias.</p>
             
             {/* Map Component */}
-            <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
+            <div className="bg-card p-4 rounded-lg shadow-sm dark:shadow-slate-800/10 mb-6">
               <LeafletMap 
                 height="400px"
                 markers={markers}
@@ -116,9 +118,9 @@ export default function PanelPage() {
             </div>
             
             {/* Reports List */}
-            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-              <div className="px-4 py-5 sm:px-6 border-b border-neutral-200">
-                <h2 className="text-lg font-medium text-neutral-800">Suas Denúncias</h2>
+            <div className="bg-card rounded-lg shadow-sm dark:shadow-slate-800/10 overflow-hidden">
+              <div className="px-4 py-5 sm:px-6 border-b border-border">
+                <h2 className="text-lg font-medium text-foreground">Suas Denúncias</h2>
               </div>
               
               {isLoadingReports ? (
@@ -126,13 +128,13 @@ export default function PanelPage() {
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </div>
               ) : reports && reports.length > 0 ? (
-                <div className="divide-y divide-neutral-200">
+                <div className="divide-y divide-border">
                   {reports.map((report) => (
-                    <div key={report.id} className="px-4 py-4 sm:px-6 hover:bg-neutral-50">
+                    <div key={report.id} className="px-4 py-4 sm:px-6 hover:bg-muted/50">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="text-sm font-medium text-primary-600">{report.title}</h3>
-                          <p className="text-sm text-neutral-500 mt-1">{report.address}</p>
+                          <h3 className="text-sm font-medium text-primary">{report.title}</h3>
+                          <p className="text-sm text-muted-foreground mt-1">{report.address}</p>
                         </div>
                         <div>
                           <Badge variant={getStatusBadgeVariant(report.status)}>
@@ -144,15 +146,15 @@ export default function PanelPage() {
                   ))}
                 </div>
               ) : (
-                <div className="px-4 py-6 text-center text-neutral-500">
+                <div className="px-4 py-6 text-center text-muted-foreground">
                   <p>Você ainda não possui denúncias registradas.</p>
                 </div>
               )}
               
-              <div className="px-4 py-4 sm:px-6 border-t border-neutral-200">
+              <div className="px-4 py-4 sm:px-6 border-t border-border">
                 <Button
                   variant="link"
-                  className="text-sm font-medium text-primary-600 hover:text-primary-500 p-0"
+                  className="text-sm font-medium text-primary hover:text-primary/90 p-0"
                   onClick={() => navigate("/report")}
                 >
                   Registrar nova denúncia
@@ -164,9 +166,9 @@ export default function PanelPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-neutral-200 mt-auto">
+      <footer className="bg-card border-t border-border mt-auto">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-sm text-neutral-500">
+          <p className="text-center text-sm text-muted-foreground">
             © {new Date().getFullYear()} Aedes Monitoramento. Todos os direitos reservados.
           </p>
         </div>

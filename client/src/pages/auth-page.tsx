@@ -25,6 +25,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
@@ -80,15 +81,15 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-card shadow-sm dark:shadow-slate-800/10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center">
               <Button
                 variant="ghost"
-                className="text-neutral-800 font-semibold text-lg"
+                className="text-foreground font-semibold text-lg"
                 onClick={() => navigate("/")}
               >
                 Aedes Monitoramento
@@ -96,9 +97,10 @@ export default function AuthPage() {
             </div>
             
             <div className="flex items-center space-x-4">
+              <ThemeToggle />
               <Button 
                 variant="ghost" 
-                className="text-sm text-neutral-600 hover:text-neutral-900"
+                className="text-sm text-muted-foreground hover:text-foreground"
                 onClick={() => {
                   setActiveTab("login");
                 }}
@@ -107,7 +109,7 @@ export default function AuthPage() {
               </Button>
               <Button 
                 variant="ghost" 
-                className="text-sm text-neutral-600 hover:text-neutral-900"
+                className="text-sm text-muted-foreground hover:text-foreground"
                 onClick={() => {
                   setActiveTab("register");
                 }}
@@ -177,11 +179,11 @@ export default function AuthPage() {
                   </Form>
                 </CardContent>
                 <CardFooter className="flex justify-center">
-                  <p className="text-sm text-neutral-600">
+                  <p className="text-sm text-muted-foreground">
                     Não tem uma conta?{" "}
                     <Button 
                       variant="link" 
-                      className="text-primary-600 hover:text-primary-500 p-0"
+                      className="text-primary hover:text-primary/90 p-0"
                       onClick={() => setActiveTab("register")}
                     >
                       Cadastre-se
@@ -292,11 +294,11 @@ export default function AuthPage() {
                   </Form>
                 </CardContent>
                 <CardFooter className="flex justify-center">
-                  <p className="text-sm text-neutral-600">
+                  <p className="text-sm text-muted-foreground">
                     Já tem uma conta?{" "}
                     <Button 
                       variant="link" 
-                      className="text-primary-600 hover:text-primary-500 p-0"
+                      className="text-primary hover:text-primary/90 p-0"
                       onClick={() => setActiveTab("login")}
                     >
                       Faça login
@@ -310,9 +312,9 @@ export default function AuthPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-neutral-200 mt-auto">
+      <footer className="bg-card border-t border-border mt-auto">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-sm text-neutral-500">
+          <p className="text-center text-sm text-muted-foreground">
             © {new Date().getFullYear()} Aedes Monitoramento. Todos os direitos reservados.
           </p>
         </div>
