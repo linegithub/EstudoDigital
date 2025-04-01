@@ -334,16 +334,16 @@ export default function ReportPage() {
                       )}
                     />
                     
-                    {/* Campos estruturados de endereço */}
+                    {/* Campos estruturados de endereço - Reorganizados na ordem solicitada */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
-                        name="street"
+                        name="zip"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Rua/Avenida</FormLabel>
+                            <FormLabel>CEP</FormLabel>
                             <FormControl>
-                              <Input placeholder="Ex: Rua das Flores" {...field} />
+                              <Input placeholder="Ex: 01310-100" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -352,12 +352,12 @@ export default function ReportPage() {
 
                       <FormField
                         control={form.control}
-                        name="number"
+                        name="street"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Número</FormLabel>
+                            <FormLabel>Rua/Avenida</FormLabel>
                             <FormControl>
-                              <Input placeholder="Ex: 123" {...field} />
+                              <Input placeholder="Ex: Av Paulista" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -368,12 +368,12 @@ export default function ReportPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
-                        name="neighborhood"
+                        name="number"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Bairro</FormLabel>
+                            <FormLabel>Número</FormLabel>
                             <FormControl>
-                              <Input placeholder="Ex: Centro" {...field} />
+                              <Input placeholder="Ex: 1000" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -382,12 +382,12 @@ export default function ReportPage() {
 
                       <FormField
                         control={form.control}
-                        name="zip"
+                        name="neighborhood"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>CEP</FormLabel>
+                            <FormLabel>Bairro</FormLabel>
                             <FormControl>
-                              <Input placeholder="Ex: 12345-678" {...field} />
+                              <Input placeholder="Ex: Bela Vista" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -439,30 +439,26 @@ export default function ReportPage() {
                       />
                     </div>
 
-                    <div className="flex gap-2 items-end">
-                      <div className="flex-grow">
-                        <FormField
-                          control={form.control}
-                          name="address"
-                          render={({ field }) => (
-                            <FormItem className="hidden">
-                              <FormControl>
-                                <Input type="hidden" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      <Button 
-                        type="button" 
-                        onClick={handleAddressLookup}
-                        variant="outline"
-                        className="flex-shrink-0"
-                      >
-                        <Search className="h-4 w-4 mr-2" />
-                        Localizar no Mapa
-                      </Button>
-                    </div>
+                    <FormField
+                      control={form.control}
+                      name="address"
+                      render={({ field }) => (
+                        <FormItem className="hidden">
+                          <FormControl>
+                            <Input type="hidden" {...field} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <Button 
+                      type="button" 
+                      onClick={handleAddressLookup}
+                      className="w-full bg-primary/80 hover:bg-primary/90 text-primary-foreground"
+                    >
+                      <Search className="h-4 w-4 mr-2" />
+                      Localizar no Mapa
+                    </Button>
                     
                     <div className="grid grid-cols-2 gap-4">
                       <FormField

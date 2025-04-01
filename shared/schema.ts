@@ -19,10 +19,18 @@ export const reports = pgTable("reports", {
   userId: integer("user_id").notNull().references(() => users.id),
   title: text("title").notNull(),
   description: text("description").notNull(),
+  // Campos estruturados de endereço
+  zip: text("zip"),
+  street: text("street").notNull(),
+  number: text("number"),
+  neighborhood: text("neighborhood"),
+  city: text("city").notNull(),
+  state: varchar("state", { length: 2 }).notNull(),
+  // Campo de endereço completo para compatibilidade
   address: text("address").notNull(),
   latitude: doublePrecision("latitude").notNull(),
   longitude: doublePrecision("longitude").notNull(),
-  status: text("status").notNull().default("pendente"),
+  status: text("status").notNull().default("recebido"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

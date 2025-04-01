@@ -127,15 +127,46 @@ export default function PanelPage() {
                 <div className="divide-y divide-border">
                   {reports.map((report) => (
                     <div key={report.id} className="px-4 py-4 sm:px-6 hover:bg-muted/50">
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between mb-2">
                         <div>
                           <h3 className="text-sm font-medium text-primary">{report.title}</h3>
-                          <p className="text-sm text-muted-foreground mt-1">{report.address}</p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Criado em: {new Date(report.createdAt).toLocaleDateString('pt-BR')}
+                          </p>
                         </div>
                         <div>
                           <Badge variant={getStatusBadgeVariant(report.status)}>
                             {formatStatus(report.status)}
                           </Badge>
+                        </div>
+                      </div>
+                      
+                      <div className="text-sm">
+                        <p className="mb-2 line-clamp-2 text-muted-foreground">{report.description}</p>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                          {report.street && (
+                            <div>
+                              <span className="font-medium">Rua/Av:</span> {report.street}
+                              {report.number && <span>, {report.number}</span>}
+                            </div>
+                          )}
+                          
+                          {report.neighborhood && (
+                            <div>
+                              <span className="font-medium">Bairro:</span> {report.neighborhood}
+                            </div>
+                          )}
+                          
+                          <div>
+                            <span className="font-medium">Cidade/UF:</span> {report.city}/{report.state}
+                          </div>
+                          
+                          {report.zip && (
+                            <div>
+                              <span className="font-medium">CEP:</span> {report.zip}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
