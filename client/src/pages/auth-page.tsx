@@ -29,8 +29,17 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
-  const [, navigate] = useLocation();
+  const [location, navigate] = useLocation();
   const [activeTab, setActiveTab] = useState<string>("login");
+
+  // Check URL parameters for tab selection
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab');
+    if (tab === 'register') {
+      setActiveTab('register');
+    }
+  }, []);
 
   // Redirect if user is already logged in
   useEffect(() => {

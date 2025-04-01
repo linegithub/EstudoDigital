@@ -1,7 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
-import { AlertTriangle, MapPin } from "lucide-react";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { AlertTriangle } from "lucide-react";
 
 export default function HomePage() {
   const [, navigate] = useLocation();
@@ -21,13 +19,18 @@ export default function HomePage() {
             </div>
             
             <div className="flex items-center space-x-4">
-              <ThemeToggle />
-              <Button 
-                className="bg-primary hover:bg-primary/90 text-primary-foreground" 
+              <span 
+                className="text-primary hover:text-primary/90 cursor-pointer text-sm" 
                 onClick={() => handleNavigate('/auth')}
               >
-                Entrar
-              </Button>
+                Login
+              </span>
+              <span 
+                className="text-primary hover:text-primary/90 cursor-pointer text-sm" 
+                onClick={() => handleNavigate('/auth?tab=register')}
+              >
+                Cadastro
+              </span>
             </div>
           </div>
         </div>
@@ -56,16 +59,6 @@ export default function HomePage() {
                 <li>Contribuir para o combate às doenças transmitidas pelo Aedes Aegypti</li>
               </ul>
               <p className="mb-4">Para começar, cadastre-se gratuitamente na plataforma.</p>
-              
-              <div className="mt-8 flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
-                <Button 
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 h-auto text-base"
-                  onClick={() => handleNavigate('/auth')}
-                >
-                  <MapPin className="h-5 w-5 mr-2" />
-                  Cadastre-se para denunciar
-                </Button>
-              </div>
             </div>
           </div>
         </div>

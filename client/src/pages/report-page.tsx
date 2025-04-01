@@ -28,6 +28,7 @@ export default function ReportPage() {
   const [, navigate] = useLocation();
   const { toast } = useToast();
   const [mapCenter, setMapCenter] = useState<[number, number]>([-23.9666, -46.3833]); // Default center
+  const [markers, setMarkers] = useState<{ position: [number, number]; popup?: string }[]>([]);
 
   // Extended schema for report form with validation
   const reportSchema = insertReportSchema
@@ -72,6 +73,7 @@ export default function ReportPage() {
         description: "Sua denúncia foi registrada com sucesso!",
       });
       queryClient.invalidateQueries({ queryKey: ["/api/user/reports"] });
+      // Redirecionar para o painel após sucesso
       navigate("/panel");
     },
     onError: (error: Error) => {
@@ -87,6 +89,12 @@ export default function ReportPage() {
   const handleMapClick = (latlng: { lat: number; lng: number }) => {
     form.setValue("latitude", latlng.lat.toString(), { shouldValidate: true });
     form.setValue("longitude", latlng.lng.toString(), { shouldValidate: true });
+    
+    // Update marker on map click
+    setMarkers([{
+      position: [latlng.lat, latlng.lng],
+      popup: form.getValues("address") || "Local selecionado"
+    }]);
   };
 
   // Handle address lookup (simulated - in a real app, would use a geocoding API)
@@ -106,9 +114,18 @@ export default function ReportPage() {
     const randomLat = -23.9666 + (Math.random() * 0.02 - 0.01);
     const randomLng = -46.3833 + (Math.random() * 0.02 - 0.01);
     
+    // Set map center to the new coordinates
     setMapCenter([randomLat, randomLng]);
+    
+    // Update form values
     form.setValue("latitude", randomLat.toString(), { shouldValidate: true });
     form.setValue("longitude", randomLng.toString(), { shouldValidate: true });
+    
+    // Add marker to the map
+    setMarkers([{
+      position: [randomLat, randomLng],
+      popup: address
+    }]);
     
     toast({
       title: "Endereço localizado",
@@ -294,6 +311,7 @@ export default function ReportPage() {
                     center={mapCenter}
                     height="100%"
                     onClick={handleMapClick}
+                    markers={markers}
                   />
                 </div>
                 <div className="flex items-center text-sm text-muted-foreground">
