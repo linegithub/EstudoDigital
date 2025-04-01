@@ -22,6 +22,7 @@ import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Search, MapPin } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { geocode } from 'nominatim-browser';
 
 export default function ReportPage() {
   const { user, logoutMutation } = useAuth();
@@ -61,7 +62,7 @@ export default function ReportPage() {
         latitude: parseFloat(data.latitude),
         longitude: parseFloat(data.longitude),
         userId: user?.id,
-        status: "pendente", // Default status
+        status: "recebido", // Novo status padrão
       };
       
       const res = await apiRequest("POST", "/api/reports", reportData);
@@ -97,8 +98,8 @@ export default function ReportPage() {
     }]);
   };
 
-  // Handle address lookup (simulated - in a real app, would use a geocoding API)
-  const handleAddressLookup = () => {
+  // Handle address lookup usando OpenStreetMap Nominatim API
+  const handleAddressLookup = async () => {
     const address = form.getValues("address");
     if (!address) {
       toast({
@@ -109,28 +110,60 @@ export default function ReportPage() {
       return;
     }
     
-    // Simulate geocoding with random coordinates near Santos, Brazil
-    // In a real app, you would use a geocoding API here
-    const randomLat = -23.9666 + (Math.random() * 0.02 - 0.01);
-    const randomLng = -46.3833 + (Math.random() * 0.02 - 0.01);
-    
-    // Set map center to the new coordinates
-    setMapCenter([randomLat, randomLng]);
-    
-    // Update form values
-    form.setValue("latitude", randomLat.toString(), { shouldValidate: true });
-    form.setValue("longitude", randomLng.toString(), { shouldValidate: true });
-    
-    // Add marker to the map
-    setMarkers([{
-      position: [randomLat, randomLng],
-      popup: address
-    }]);
-    
-    toast({
-      title: "Endereço localizado",
-      description: "Localização aproximada encontrada no mapa.",
-    });
+    try {
+      // Adicionar "Brasil" ao final do endereço para melhorar a precisão
+      const searchAddress = `${address}, Brasil`;
+      
+      // Indicar que está processando
+      toast({
+        title: "Localizando endereço...",
+        description: "Aguarde enquanto buscamos o endereço no mapa.",
+      });
+      
+      // Realizar a geocodificação - usando tipos mais simples para compatibilidade
+      const results = await geocode({
+        q: searchAddress,
+        limit: 1
+      });
+      
+      if (results && results.length > 0) {
+        const location = results[0];
+        const lat = parseFloat(location.lat);
+        const lng = parseFloat(location.lon);
+        
+        // Definir o centro do mapa
+        setMapCenter([lat, lng]);
+        
+        // Atualizar os valores do formulário
+        form.setValue("latitude", lat.toString(), { shouldValidate: true });
+        form.setValue("longitude", lng.toString(), { shouldValidate: true });
+        
+        // Adicionar marcador ao mapa
+        setMarkers([{
+          position: [lat, lng],
+          popup: address
+        }]);
+        
+        toast({
+          title: "Endereço localizado",
+          description: "Localização precisa encontrada no mapa.",
+        });
+      } else {
+        // Caso não encontre o endereço
+        toast({
+          title: "Endereço não encontrado",
+          description: "Não foi possível localizar o endereço. Tente ser mais específico ou marque diretamente no mapa.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Erro ao geocodificar:", error);
+      toast({
+        title: "Erro ao localizar endereço",
+        description: "Ocorreu um erro ao buscar o endereço. Tente novamente ou marque diretamente no mapa.",
+        variant: "destructive",
+      });
+    }
   };
 
   // Form submit handler

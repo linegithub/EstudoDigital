@@ -1,5 +1,6 @@
 import { useLocation } from "wouter";
 import { AlertTriangle } from "lucide-react";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export default function HomePage() {
   const [, navigate] = useLocation();
@@ -19,6 +20,7 @@ export default function HomePage() {
             </div>
             
             <div className="flex items-center space-x-4">
+              <ThemeToggle />
               <span 
                 className="text-primary hover:text-primary/90 cursor-pointer text-sm" 
                 onClick={() => handleNavigate('/auth')}

@@ -30,8 +30,6 @@ export default function PanelPage() {
   // Status badge color mapper
   const getStatusBadgeVariant = (status: string) => {
     switch(status) {
-      case 'pendente':
-        return 'warning';
       case 'em_andamento':
         return 'secondary';
       case 'resolvido':
@@ -46,8 +44,6 @@ export default function PanelPage() {
   // Format status label
   const formatStatus = (status: string) => {
     switch(status) {
-      case 'pendente':
-        return 'Pendente';
       case 'em_andamento':
         return 'Em Andamento';
       case 'resolvido':
@@ -55,7 +51,7 @@ export default function PanelPage() {
       case 'cancelado':
         return 'Cancelado';
       default:
-        return status;
+        return 'Recebido'; // Default status quando não houver status definido
     }
   };
 
