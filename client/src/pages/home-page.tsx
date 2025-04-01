@@ -1,0 +1,92 @@
+import { Button } from "@/components/ui/button";
+import { useLocation } from "wouter";
+
+export default function HomePage() {
+  const [, navigate] = useLocation();
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      {/* Header */}
+      <header className="bg-white shadow-sm">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16 items-center">
+            <div className="flex items-center">
+              <span className="text-neutral-800 font-semibold text-lg">Aedes Monitoramento</span>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              <Button 
+                variant="ghost" 
+                className="text-sm text-neutral-600 hover:text-neutral-900"
+                onClick={() => handleNavigate('/auth')}
+              >
+                Login
+              </Button>
+              <Button 
+                variant="ghost" 
+                className="text-sm text-neutral-600 hover:text-neutral-900"
+                onClick={() => handleNavigate('/auth')}
+              >
+                Cadastro
+              </Button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-grow">
+        <div className="py-8">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 className="text-2xl sm:text-3xl font-semibold text-neutral-800 mb-6">
+              Bem-vindo ao Monitoramento do Aedes Aegypti
+            </h1>
+            <div className="prose prose-sm sm:prose max-w-none text-neutral-700">
+              <p className="mb-4">
+                O sistema de monitoramento do Aedes Aegypti permite que cidadãos registrem 
+                denúncias de possíveis focos do mosquito transmissor da dengue, zika e chikungunya.
+              </p>
+              <p className="mb-4">Através desta plataforma, você pode:</p>
+              <ul className="list-disc pl-5 mb-4">
+                <li>Registrar denúncias de possíveis focos do mosquito</li>
+                <li>Visualizar denúncias registradas no mapa</li>
+                <li>Acompanhar o status das suas denúncias</li>
+                <li>Contribuir para o combate às doenças transmitidas pelo Aedes Aegypti</li>
+              </ul>
+              <p className="mb-4">Para começar, faça login ou cadastre-se gratuitamente.</p>
+              
+              <div className="mt-6 flex flex-col sm:flex-row sm:space-x-4 space-y-3 sm:space-y-0">
+                <Button 
+                  className="bg-primary-600 hover:bg-primary-700 text-white"
+                  onClick={() => handleNavigate('/auth')}
+                >
+                  Cadastre-se
+                </Button>
+                <Button 
+                  variant="outline"
+                  className="border-neutral-300 text-neutral-700 hover:bg-neutral-50"
+                  onClick={() => handleNavigate('/auth')}
+                >
+                  Fazer Login
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-white border-t border-neutral-200 mt-auto">
+        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+          <p className="text-center text-sm text-neutral-500">
+            © {new Date().getFullYear()} Aedes Monitoramento. Todos os direitos reservados.
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+}
