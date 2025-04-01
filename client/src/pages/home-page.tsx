@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
+import { AlertTriangle, MapPin } from "lucide-react";
 
 export default function HomePage() {
   const [, navigate] = useLocation();
@@ -20,18 +21,10 @@ export default function HomePage() {
             
             <div className="flex items-center space-x-4">
               <Button 
-                variant="ghost" 
-                className="text-sm text-neutral-600 hover:text-neutral-900"
+                className="bg-primary hover:bg-primary/90 text-white" 
                 onClick={() => handleNavigate('/auth')}
               >
-                Login
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="text-sm text-neutral-600 hover:text-neutral-900"
-                onClick={() => handleNavigate('/auth')}
-              >
-                Cadastro
+                Entrar
               </Button>
             </div>
           </div>
@@ -40,11 +33,14 @@ export default function HomePage() {
 
       {/* Main Content */}
       <main className="flex-grow">
-        <div className="py-8">
+        <div className="py-12">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-2xl sm:text-3xl font-semibold text-neutral-800 mb-6">
-              Bem-vindo ao Monitoramento do Aedes Aegypti
-            </h1>
+            <div className="flex items-center gap-3 mb-6">
+              <AlertTriangle className="h-8 w-8 text-primary" />
+              <h1 className="text-2xl sm:text-3xl font-semibold text-neutral-800">
+                Monitoramento do Aedes Aegypti
+              </h1>
+            </div>
             <div className="prose prose-sm sm:prose max-w-none text-neutral-700">
               <p className="mb-4">
                 O sistema de monitoramento do Aedes Aegypti permite que cidadãos registrem 
@@ -57,21 +53,15 @@ export default function HomePage() {
                 <li>Acompanhar o status das suas denúncias</li>
                 <li>Contribuir para o combate às doenças transmitidas pelo Aedes Aegypti</li>
               </ul>
-              <p className="mb-4">Para começar, faça login ou cadastre-se gratuitamente.</p>
+              <p className="mb-4">Para começar, cadastre-se gratuitamente na plataforma.</p>
               
-              <div className="mt-6 flex flex-col sm:flex-row sm:space-x-4 space-y-3 sm:space-y-0">
+              <div className="mt-8 flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
                 <Button 
-                  className="bg-primary-600 hover:bg-primary-700 text-white"
+                  className="bg-primary hover:bg-primary/90 text-white px-8 py-6 h-auto text-base"
                   onClick={() => handleNavigate('/auth')}
                 >
-                  Cadastre-se
-                </Button>
-                <Button 
-                  variant="outline"
-                  className="border-neutral-300 text-neutral-700 hover:bg-neutral-50"
-                  onClick={() => handleNavigate('/auth')}
-                >
-                  Fazer Login
+                  <MapPin className="h-5 w-5 mr-2" />
+                  Cadastre-se para denunciar
                 </Button>
               </div>
             </div>
