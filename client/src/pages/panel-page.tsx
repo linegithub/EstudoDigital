@@ -56,9 +56,13 @@ export default function PanelPage() {
   };
   
   // Format date helper
-  const formatDate = (dateString: string | null | undefined) => {
-    if (!dateString) return '-';
-    return new Date(dateString).toLocaleDateString('pt-BR');
+  const formatDate = (date: any) => {
+    if (!date) return '-';
+    try {
+      return new Date(date).toLocaleDateString('pt-BR');
+    } catch (error) {
+      return '-';
+    }
   };
 
   return (
@@ -130,46 +134,44 @@ export default function PanelPage() {
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </div>
               ) : reports && reports.length > 0 ? (
-                <div className="divide-y divide-border">
+                <div className="p-2">
                   {reports.map((report) => (
-                    <div key={report.id} className="px-4 py-5 sm:px-6 hover:bg-muted/50">
-                      <div className="flex items-center justify-between">
+                    <div key={report.id} className="p-4 hover:bg-muted/50 bg-sky-50 dark:bg-slate-800/50 rounded-md my-2 mx-2">
+                      <div className="flex justify-between items-start mb-1">
                         <h3 className="text-base font-medium text-primary">{report.title}</h3>
-                        <Badge variant={getStatusBadgeVariant(report.status)}>
+                        <Badge variant="outline" className="ml-1 bg-white">
                           {formatStatus(report.status)}
                         </Badge>
                       </div>
                       
-                      <div className="mt-2">
-                        <p className="text-sm text-muted-foreground mb-3">
-                          {report.description}
-                        </p>
+                      <p className="text-sm mb-3">
+                        {report.description}
+                      </p>
+                      
+                      <div className="text-sm space-y-1 text-muted-foreground">
+                        <div className="flex">
+                          <span className="inline-block w-20">Criado em:</span> 
+                          <span>{formatDate(report.createdAt)}</span>
+                        </div>
                         
-                        <div className="text-sm text-muted-foreground">
-                          <p className="mb-1">
-                            <span className="inline-block w-28">Criado em:</span> 
-                            {formatDate(report.createdAt as string)}
-                          </p>
-                          
-                          <p className="mb-1">
-                            <span className="inline-block w-28">Endereço:</span> 
-                            {report.street}{report.number ? `, ${report.number}` : ''}
-                          </p>
-                          
-                          <p className="mb-1">
-                            <span className="inline-block w-28">Bairro:</span> 
-                            {report.neighborhood || '-'}
-                          </p>
-                          
-                          <p className="mb-1">
-                            <span className="inline-block w-28">Cidade/UF:</span> 
-                            {report.city}/{report.state}
-                          </p>
-                          
-                          <p className="mb-1">
-                            <span className="inline-block w-28">CEP:</span> 
-                            {report.zip || '-'}
-                          </p>
+                        <div className="flex">
+                          <span className="inline-block w-20">Endereço:</span> 
+                          <span>{report.street || '-'}</span>
+                        </div>
+                        
+                        <div className="flex">
+                          <span className="inline-block w-20">Bairro:</span> 
+                          <span>{report.neighborhood || '-'}</span>
+                        </div>
+                        
+                        <div className="flex">
+                          <span className="inline-block w-20">Cidade/UF:</span> 
+                          <span>{report.city || '-'} / {report.state || '-'}</span>
+                        </div>
+                        
+                        <div className="flex">
+                          <span className="inline-block w-20">CEP:</span> 
+                          <span>{report.zip || '-'}</span>
                         </div>
                       </div>
                     </div>
